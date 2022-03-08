@@ -1,38 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
-import { useEffect, useState } from 'react';
-import axios from 'axios'
+import "./App.css";
+import { useEffect, useState } from "react";
+
+import SearchIcon from "./search.svg";
+import MovieCard from "./MovieCard";
 
 function App() {
+  const API_URL = " http://www.omdbapi.com/?i=tt3896198&apikey=92cd55bd";
+  const [movies,setMovies] = useState([])
 
 
-const API_URL =' http://www.omdbapi.com/?i=tt3896198&apikey=92cd55bd'
+  const searchMovies = async (title) => {
+    const response = await fetch(`${API_URL}&s=${title}`);
+    const data = await response.json();
+    setMovies(data.Search);
+  };
 
 
-const searchMovies = async (title)=>{
-const response = await fetch(`${API_URL}&s=${title}`);
-const data = await response.json();
-console.log(data.Search)
-        
+  useEffect(() => {
+    searchMovies();
+  },[]);
+
+  return (
+    <div className="app">
+      <h1>MovieLand</h1>
+
+      <div className="search">
+        <input placeholder="search for movie" />
+        <img src={SearchIcon} alt="search" />
+      </div>
+
+{
+  movies?.length >0 
+  ?(
+    <div className="container">
+  {
+    movies.map((movie)=>(
+      <MovieCard  movie={movie}/>
+    ))
+  }
+  </div>
+  ):
+  (
+    <div className="empty">
+      <h2>no found</h2>
+
+    </div>
+  )
 }
 
 
 
-useEffect(()=>{
-searchMovies('spiderman')
-},[])
 
-
-  return (
-
-    <div className="App">
-
-
-
-
-
-      App
-     </div>
+      
+    </div>
   );
 }
 
